@@ -95,9 +95,9 @@ class SignInScreen extends StatelessWidget {
                     ),
                     customeTextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
-                          ));
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //   builder: (context) => SignUpScreen(),
+                          // ));
                         },
                         text: "Sign Up",
                         textColor: DARK_BLUE_COLOR),
