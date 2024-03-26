@@ -24,3 +24,16 @@ normalStyle({Color? color,
       fontWeight: fontWeight ?? FontWeight.normal);
 
 }
+
+nunitoStyle(
+    {Color? color,
+    double? fontsize,
+    FontWeight? fontWeight,
+    double? letterSpacing}) {
+  return GoogleFonts.nunito(
+   
+      letterSpacing: letterSpacing ?? 0,
+      color: color ?? Colors.black,
+      fontSize: fontsize ?? 16,
+      fontWeight: fontWeight ?? FontWeight.normal);
+}

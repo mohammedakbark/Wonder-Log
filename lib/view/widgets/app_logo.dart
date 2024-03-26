@@ -47,13 +47,13 @@ Column appSmallLogo() {
           Positioned(
               left: 3,
               child: Image.asset(
-                scale: 2,
+                scale: 2  ,
                 "assets/logolayer1.png",
               )),
           Positioned(
               child: Image.asset(
             "assets/logolayer2.png",
-            scale: 2,
+            scale: 2  ,
             color: WHITE,
           )),
         ],

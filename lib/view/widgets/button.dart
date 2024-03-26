@@ -36,3 +36,24 @@ Widget customeTextButton(
         style: TextStyle(color: textColor, fontSize: 18),
       ));
 }
+ Widget navButton({ double? iconSize,required  icon,required double hight,required double width,required void Function()? onTap}) {
+  return InkWell(
+    onTap:onTap,
+    child: Container(
+      height: hight,
+      width: width,
+      decoration: const BoxDecoration(
+          color: DARK_BLUE_COLOR,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.elliptical(40, 50),
+              bottomRight: Radius.elliptical(69, 90),
+              topRight: Radius.elliptical(60, 30),
+              bottomLeft: Radius.elliptical(60, 50))),
+      child:  Icon(
+        icon,
+        size: iconSize,
+        color: WHITE,
+      ),
+    ),
+  );
+}

@@ -5,14 +5,15 @@ import 'package:wanderlog/controller/auth_controller.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/const.dart';
 import 'package:wanderlog/util/style.dart';
-import 'package:wanderlog/view/signup_screen.dart';
+import 'package:wanderlog/view/sign_in_screen.dart';
 import 'package:wanderlog/view/widgets/app_logo.dart';
 import 'package:wanderlog/view/widgets/button.dart';
 import 'package:wanderlog/view/widgets/text_field.dart';
 
-class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -37,17 +38,31 @@ class SignInScreen extends StatelessWidget {
                     height: height * .15,
                   ),
                   Text(
-                    "Sign In Now",
+                    "Sign Up Now",
                     style:
                         normalStyle(fontWeight: FontWeight.w700, fontsize: 34),
                   ),
                   Text(
-                    "Please sign in to continue our app",
+                    "Please fill the details and create account",
                     style:
                         normalStyle(fontWeight: FontWeight.w400, fontsize: 20),
                   ),
                   SizedBox(
                     height: height * .08,
+                  ),
+                  customeTextField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter the required field";
+                        } else {
+                          return null;
+                        }
+                      },
+                      height: height,
+                      width: width,
+                      hintText: "Name"),
+                  SizedBox(
+                    height: height * .02,
                   ),
                   customeTextField(
                       validator: (value) {
@@ -67,6 +82,7 @@ class SignInScreen extends StatelessWidget {
                   ),
                   Consumer<AuthController>(builder: (context, controller, _) {
                     return customeTextField(
+                      controller: controller.passwordcontroller,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Enter the required field";
@@ -91,13 +107,39 @@ class SignInScreen extends StatelessWidget {
                       ),
                     );
                   }),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: customeTextButton(
-                        onPressed: () {},
-                        text: "Forget Password?",
-                        textColor: DARK_BLUE_COLOR),
+                  SizedBox(
+                    height: height * .02,
                   ),
+                  Consumer<AuthController>(builder: (context, controller, _) {
+                    return customeTextField(
+                      controller: controller.confirmPasswordcontroller,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter the required field";
+                        } else if (value.length < 8) {
+                          return "Password required minimum 8 digit";
+                        } else if (value !=
+                            controller.passwordcontroller.text) {
+                          return "Password does not match";
+                        } else {
+                          return null;
+                        }
+                      },
+                      obscureText: controller.obscureText,
+                      height: height,
+                      width: width,
+                      hintText: "Confirm Password",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          controller.isTextVisible();
+                        },
+                        icon: Icon(controller.obscureText
+                            ? Icons.remove_red_eye_sharp
+                            : CupertinoIcons.eye_slash_fill),
+                        color: GREY,
+                      ),
+                    );
+                  }),
                   SizedBox(
                     height: height * .05,
                   ),
@@ -107,7 +149,7 @@ class SignInScreen extends StatelessWidget {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {}
                       },
-                      text: "Sign In",
+                      text: "Sign Up",
                       textColor: WHITE,
                       bgColor: DARK_BLUE_COLOR),
                   SizedBox(
@@ -117,16 +159,17 @@ class SignInScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don’t have an account?",
+                        "Already have an account",
                         style: normalStyle(color: WHITE, fontsize: 18),
                       ),
                       customeTextButton(
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SignUpScreen(),
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => SignInScreen(),
                             ));
                           },
-                          text: "Sign Up",
+                          text: "Sign In",
                           textColor: DARK_BLUE_COLOR),
                     ],
                   ),
