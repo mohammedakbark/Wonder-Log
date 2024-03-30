@@ -12,19 +12,22 @@ class Navigation extends StatelessWidget {
   PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   List<Widget> _buildScreens() {
-    return [ HomeTab(), const NotificationTab(), const LocationTab(), const ProfileTab()];
+    return [
+      HomeTab(),
+      const NotificationTab(),
+      const LocationTab(),
+      const ProfileTab()
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return PersistentTabView(
-      
-      
       navBarHeight: height * .09,
       context,
       controller: _controller,
-            screens: _buildScreens(),
+      screens: _buildScreens(),
       items: _navBarsItems(),
       confineInSafeArea: true,
       backgroundColor: DARK_BLUE_COLOR,
@@ -35,7 +38,7 @@ class Navigation extends StatelessWidget {
       ),
 
       itemAnimationProperties: const ItemAnimationProperties(
-        duration:  Duration(milliseconds: 200),
+        duration: Duration(milliseconds: 200),
         curve: Curves.ease,
       ),
       screenTransitionAnimation: const ScreenTransitionAnimation(

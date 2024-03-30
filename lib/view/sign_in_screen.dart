@@ -49,24 +49,28 @@ class SignInScreen extends StatelessWidget {
                   SizedBox(
                     height: height * .08,
                   ),
-                  customeTextField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter the required field";
-                        } else if (!(regEx.hasMatch(value))) {
-                          return "The Email is not valid";
-                        } else {
-                          return null;
-                        }
-                      },
-                      height: height,
-                      width: width,
-                      hintText: "Email"),
+                  Consumer<AuthController>(builder: (context, controller, _) {
+                    return customeTextField(
+                        controller: controller.emailcontroller,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter the required field";
+                          } else if (!(regEx.hasMatch(value))) {
+                            return "The Email is not valid";
+                          } else {
+                            return null;
+                          }
+                        },
+                        height: height,
+                        width: width,
+                        hintText: "Email");
+                  }),
                   SizedBox(
                     height: height * .02,
                   ),
                   Consumer<AuthController>(builder: (context, controller, _) {
                     return customeTextField(
+                      controller: controller.passwordcontroller,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Enter the required field";
@@ -101,15 +105,22 @@ class SignInScreen extends StatelessWidget {
                   SizedBox(
                     height: height * .05,
                   ),
-                  customeElevtedButton(
-                      width: width,
-                      height: height,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {}
-                      },
-                      text: "Sign In",
-                      textColor: WHITE,
-                      bgColor: DARK_BLUE_COLOR),
+                  Consumer<AuthController>(
+                      builder: (context, authController, _) {
+                    return customeElevtedButton(
+                        width: width,
+                        height: height,
+                        onPressed: () {
+                          // if (_formKey.currentState!.validate()) {
+                          authController.signIn(
+                              authController.emailcontroller.text,
+                              authController.passwordcontroller.text,
+                              context); // }
+                        },
+                        text: "Sign In",
+                        textColor: WHITE,
+                        bgColor: DARK_BLUE_COLOR);
+                  }),
                   SizedBox(
                     height: height * .05,
                   ),

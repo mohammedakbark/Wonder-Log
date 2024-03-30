@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wanderlog/util/colors.dart';
+import 'package:wanderlog/view/navigation_bar.dart';
 import 'package:wanderlog/view/statrt_screen.dart';
 import 'package:wanderlog/view/widgets/app_logo.dart';
 
@@ -9,11 +11,19 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3)).then((value) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const GetStartScreen(),
-          ),
-          (route) => false);
+      if (FirebaseAuth.instance.currentUser == null) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => GetStartScreen(),
+            ),
+            (route) => false);
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) =>  Navigation(),
+            ),
+            (route) => false);
+      }
     });
 
     final width = MediaQuery.of(context).size.width;

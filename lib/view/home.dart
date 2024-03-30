@@ -1,8 +1,10 @@
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:wanderlog/controller/controller.dart';
 import 'package:wanderlog/util/colors.dart';
+import 'package:wanderlog/util/snack_bar.dart';
 import 'package:wanderlog/util/style.dart';
 import 'package:wanderlog/view/about.dart';
 import 'package:wanderlog/view/new_request_page.dart';
@@ -73,7 +75,14 @@ class HomeTab extends StatelessWidget {
                               builder: (context) => const Privacy(),
                             ));
                           }),
-                      drawerButton(title: "Log out", onPressed: () {}),
+                      drawerButton(
+                          title: "Log out",
+                          onPressed: () {
+                            showLoadingIndicator(context);
+                            // FirebaseAuth.instance.signOut().then((value) {
+                            //   exit(0);
+                            // });
+                          }),
                     ],
                   ),
                 )

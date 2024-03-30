@@ -12,6 +12,7 @@ import 'package:wanderlog/view/widgets/text_field.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -26,158 +27,165 @@ class SignUpScreen extends StatelessWidget {
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: height * .15,
-                  ),
-                  appSmallLogo(),
-                  SizedBox(
-                    height: height * .15,
-                  ),
-                  Text(
-                    "Sign Up Now",
-                    style:
-                        normalStyle(fontWeight: FontWeight.w700, fontsize: 34),
-                  ),
-                  Text(
-                    "Please fill the details and create account",
-                    style:
-                        normalStyle(fontWeight: FontWeight.w400, fontsize: 20),
-                  ),
-                  SizedBox(
-                    height: height * .08,
-                  ),
-                  customeTextField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter the required field";
-                        } else {
-                          return null;
-                        }
-                      },
-                      height: height,
-                      width: width,
-                      hintText: "Name"),
-                  SizedBox(
-                    height: height * .02,
-                  ),
-                  customeTextField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter the required field";
-                        } else if (!(regEx.hasMatch(value))) {
-                          return "The Email is not valid";
-                        } else {
-                          return null;
-                        }
-                      },
-                      height: height,
-                      width: width,
-                      hintText: "Email"),
-                  SizedBox(
-                    height: height * .02,
-                  ),
-                  Consumer<AuthController>(builder: (context, controller, _) {
-                    return customeTextField(
-                      controller: controller.passwordcontroller,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter the required field";
-                        } else if (value.length < 8) {
-                          return "Password required minimum 8 digit";
-                        } else {
-                          return null;
-                        }
-                      },
-                      obscureText: controller.obscureText,
-                      height: height,
-                      width: width,
-                      hintText: "Password",
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          controller.isTextVisible();
+              child: Consumer<AuthController>(
+                  builder: (context, authController, _) {
+               
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height * .15,
+                    ),
+                    appSmallLogo(),
+                    SizedBox(
+                      height: height * .15,
+                    ),
+                    Text(
+                      "Sign Up Now",
+                      style: normalStyle(
+                          fontWeight: FontWeight.w700, fontsize: 34),
+                    ),
+                    Text(
+                      "Please fill the details and create account",
+                      style: normalStyle(
+                          fontWeight: FontWeight.w400, fontsize: 20),
+                    ),
+                    SizedBox(
+                      height: height * .08,
+                    ),
+                    customeTextField(
+                        controller: authController.nameController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter the required field";
+                          } else {
+                            return null;
+                          }
                         },
-                        icon: Icon(controller.obscureText
-                            ? Icons.remove_red_eye_sharp
-                            : CupertinoIcons.eye_slash_fill),
-                        color: GREY,
-                      ),
-                    );
-                  }),
-                  SizedBox(
-                    height: height * .02,
-                  ),
-                  Consumer<AuthController>(builder: (context, controller, _) {
-                    return customeTextField(
-                      controller: controller.confirmPasswordcontroller,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter the required field";
-                        } else if (value.length < 8) {
-                          return "Password required minimum 8 digit";
-                        } else if (value !=
-                            controller.passwordcontroller.text) {
-                          return "Password does not match";
-                        } else {
-                          return null;
-                        }
-                      },
-                      obscureText: controller.obscureText,
-                      height: height,
-                      width: width,
-                      hintText: "Confirm Password",
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          controller.isTextVisible();
+                        height: height,
+                        width: width,
+                        hintText: "Name"),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    customeTextField(
+                        controller: authController.emailcontroller,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter the required field";
+                          } else if (!(regEx.hasMatch(value))) {
+                            return "The Email is not valid";
+                          } else {
+                            return null;
+                          }
                         },
-                        icon: Icon(controller.obscureText
-                            ? Icons.remove_red_eye_sharp
-                            : CupertinoIcons.eye_slash_fill),
-                        color: GREY,
-                      ),
-                    );
-                  }),
-                  SizedBox(
-                    height: height * .05,
-                  ),
-                  customeElevtedButton(
-                      width: width,
-                      height: height,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {}
-                      },
-                      text: "Sign Up",
-                      textColor: WHITE,
-                      bgColor: DARK_BLUE_COLOR),
-                  SizedBox(
-                    height: height * .05,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Already have an account",
-                        style: normalStyle(color: WHITE, fontsize: 18),
-                      ),
-                      customeTextButton(
+                        height: height,
+                        width: width,
+                        hintText: "Email"),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    Consumer<AuthController>(builder: (context, controller, _) {
+                      return customeTextField(
+                        controller: authController.passwordcontroller,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter the required field";
+                          } else if (value.length < 8) {
+                            return "Password required minimum 8 digit";
+                          } else {
+                            return null;
+                          }
+                        },
+                        obscureText: controller.obscureText,
+                        height: height,
+                        width: width,
+                        hintText: "Password",
+                        suffixIcon: IconButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (context) => SignInScreen(),
-                            ));
+                            controller.isTextVisible();
                           },
-                          text: "Sign In",
-                          textColor: DARK_BLUE_COLOR),
-                    ],
-                  ),
-                  SizedBox(
-                    height: height * .05,
-                  ),
-                ],
-              ),
+                          icon: Icon(controller.obscureText
+                              ? Icons.remove_red_eye_sharp
+                              : CupertinoIcons.eye_slash_fill),
+                          color: GREY,
+                        ),
+                      );
+                    }),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    Consumer<AuthController>(builder: (context, controller, _) {
+                      return customeTextField(
+                        controller: authController.confirmPasswordcontroller,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter the required field";
+                          } else if (value.length < 8) {
+                            return "Password required minimum 8 digit";
+                          } else if (value !=
+                              controller.passwordcontroller.text) {
+                            return "Password does not match";
+                          } else {
+                            return null;
+                          }
+                        },
+                        obscureText: controller.obscureText,
+                        height: height,
+                        width: width,
+                        hintText: "Confirm Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            controller.isTextVisible();
+                          },
+                          icon: Icon(controller.obscureText
+                              ? Icons.remove_red_eye_sharp
+                              : CupertinoIcons.eye_slash_fill),
+                          color: GREY,
+                        ),
+                      );
+                    }),
+                    SizedBox(
+                      height: height * .05,
+                    ),
+                    customeElevtedButton(
+                        width: width,
+                        height: height,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {}
+                        },
+                        text: "Sign Up",
+                        textColor: WHITE,
+                        bgColor: DARK_BLUE_COLOR),
+                    SizedBox(
+                      height: height * .05,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account",
+                          style: normalStyle(color: WHITE, fontsize: 18),
+                        ),
+                        customeTextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => SignInScreen(),
+                              ));
+                            },
+                            text: "Sign In",
+                            textColor: DARK_BLUE_COLOR),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height * .05,
+                    ),
+                  ],
+                );
+              }),
             ),
           ),
         ),
