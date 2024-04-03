@@ -1,4 +1,6 @@
+import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -11,6 +13,7 @@ import 'package:wanderlog/view/new_request_page.dart';
 import 'package:wanderlog/view/notification.dart';
 import 'package:wanderlog/view/profile.dart';
 import 'package:wanderlog/view/single_item_page.dart';
+import 'package:wanderlog/view/splash_screen.dart';
 import 'package:wanderlog/view/widgets/button.dart';
 import 'package:wanderlog/view/privacy.dart';
 import 'package:wanderlog/view/widgets/rating_bar.dart';
@@ -75,14 +78,25 @@ class HomeTab extends StatelessWidget {
                               builder: (context) => const Privacy(),
                             ));
                           }),
-                      drawerButton(
-                          title: "Log out",
-                          onPressed: () {
-                            showLoadingIndicator(context);
-                            // FirebaseAuth.instance.signOut().then((value) {
-                            //   exit(0);
-                            // });
-                          }),
+                    
+                     drawerButton(
+                            title: "Log out",
+                            onPressed: () {
+                        
+                              // showLoadingIndicator(
+                              //     context, "Removing credentials");
+                              // Future.delayed(Duration(seconds: 2))
+                              //     .then((value) {
+                              FirebaseAuth.instance.signOut().then((value) {
+                                // Navigator.of(context).pop();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => SplashScreen()),
+                                    (route) => false);
+                              });
+                           
+                        // });
+                      }),
                     ],
                   ),
                 )

@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:provider/provider.dart';
+import 'package:wanderlog/controller/controller.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/view/home.dart';
 import 'package:wanderlog/view/location.dart';
 import 'package:wanderlog/view/notification.dart';
 import 'package:wanderlog/view/profile.dart';
 
-class Navigation extends StatelessWidget {
+class Navigation extends StatefulWidget {
   Navigation({super.key});
-  PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
+
+  @override
+  State<Navigation> createState() => _NavigationState();
+}
+
+class _NavigationState extends State<Navigation> {
   List<Widget> _buildScreens() {
     return [
       HomeTab(),
@@ -23,59 +28,54 @@ class Navigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return PersistentTabView(
-      navBarHeight: height * .09,
-      context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems(),
-      confineInSafeArea: true,
-      backgroundColor: DARK_BLUE_COLOR,
+    return Consumer<Controller>(builder: (context, controller, child) {
+      return Scaffold(
+          extendBody: true,
+          body: _buildScreens()[controller.selectedNavindex],
+          bottomNavigationBar: ClipRRect(
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+            child: SizedBox(
+              height: height * .08,
+              child: BottomNavigationBar(
+                  useLegacyColorScheme: false,
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex: controller.selectedNavindex,
+                  onTap: (value) {
+                    controller.changeNavIndex(value);
+                  },
 
-      decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        colorBehindNavBar: Colors.white,
-      ),
-
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        // Screen transition animation on change of selected tab.
-        animateTabTransition: true,
-        curve: Curves.ease,
-        duration: Duration(milliseconds: 200),
-      ),
-      navBarStyle:
-          NavBarStyle.simple, // Choose the nav bar style with this property.
-    );
+                  // fixedColor: Colors.black,
+                  selectedItemColor: WHITE,
+                  unselectedItemColor: CupertinoColors.systemGrey3,
+                  backgroundColor: DARK_BLUE_COLOR,
+                  items: _navBarsItems()),
+            ),
+          ));
+    });
   }
 
-  List<PersistentBottomNavBarItem> _navBarsItems() {
+  List<BottomNavigationBarItem> _navBarsItems() {
     return [
-      PersistentBottomNavBarItem(
-          icon: const ImageIcon(AssetImage("assets/home.png")),
-          title: ("Home"),
-          activeColorPrimary: WHITE,
-          inactiveColorPrimary: CupertinoColors.systemGrey3),
-      PersistentBottomNavBarItem(
-        icon: const ImageIcon(AssetImage("assets/notification.png")),
-        title: ("Notification"),
-        activeColorPrimary: WHITE,
-        inactiveColorPrimary: CupertinoColors.systemGrey3,
+      const BottomNavigationBarItem(
+        backgroundColor: DARK_BLUE_COLOR,
+        icon: ImageIcon(AssetImage("assets/home.png")),
+        label: ("Home"),
       ),
-      PersistentBottomNavBarItem(
-        icon: const ImageIcon(AssetImage("assets/location.png")),
-        title: ("Location"),
-        activeColorPrimary: WHITE,
-        inactiveColorPrimary: CupertinoColors.systemGrey3,
+      const BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage("assets/notification.png")),
+        label: ("Notification"),
+        backgroundColor: DARK_BLUE_COLOR,
       ),
-      PersistentBottomNavBarItem(
-        icon: const ImageIcon(AssetImage("assets/profile.png")),
-        title: ("Profile"),
-        activeColorPrimary: WHITE,
-        inactiveColorPrimary: CupertinoColors.systemGrey3,
+      const BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage("assets/location.png")),
+        label: ("Location"),
+        backgroundColor: DARK_BLUE_COLOR,
+      ),
+      const BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage("assets/profile.png")),
+        label: ("Profile"),
+        backgroundColor: DARK_BLUE_COLOR,
       ),
     ];
   }

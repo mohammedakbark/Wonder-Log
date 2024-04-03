@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:wanderlog/controller/controller.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/snack_bar.dart';

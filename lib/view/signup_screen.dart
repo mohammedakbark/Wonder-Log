@@ -29,8 +29,6 @@ class SignUpScreen extends StatelessWidget {
               key: _formKey,
               child: Consumer<AuthController>(
                   builder: (context, authController, _) {
-               
-
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -154,7 +152,13 @@ class SignUpScreen extends StatelessWidget {
                         width: width,
                         height: height,
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {}
+                          if (_formKey.currentState!.validate()) {
+                            authController.signUp(
+                                authController.emailcontroller.text.trim(),
+                                authController.passwordcontroller.text.trim(),
+                                authController.nameController.text.trim(),
+                                context);
+                          }
                         },
                         text: "Sign Up",
                         textColor: WHITE,

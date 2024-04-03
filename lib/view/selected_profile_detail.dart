@@ -114,4 +114,5 @@ class SelectedProfileDetail extends StatelessWidget {
       ),
     );
   }
+  
 }

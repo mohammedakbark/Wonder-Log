@@ -1,9 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wanderlog/controller/controller.dart';
+import 'package:wanderlog/controller/fire_controller.dart';
+import 'package:wanderlog/model/user_model.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/snack_bar.dart';
 import 'package:wanderlog/util/style.dart';
 import 'package:wanderlog/view/navigation_bar.dart';
+import 'package:wanderlog/view/splash_screen.dart';
 
 class AuthController with ChangeNotifier {
   bool obscureText = true;
@@ -29,10 +34,29 @@ class AuthController with ChangeNotifier {
 
   final auth = FirebaseAuth.instance;
 
-  Future signUp(String email, String password, context) async {
+  Future signUp(
+    String email,
+    String password,
+    String name,
+    context,
+  ) async {
     try {
-      await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      showLoadingIndicator(context, "Pleas wait a moment");
+
+      await auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((credential) {
+        Provider.of<FireController>(context, listen: false)
+            .addUser(credential.user!.uid,
+                UserModel(bio: "", email: email, imageUrl: "", name: name))
+            .then((value) {
+          clearController();
+          successSnackBar(context, "Registration successful");
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => SplashScreen()),
+              (route) => false);
+        });
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         errorSnackBar(context, "The password provided is too weak.");
@@ -46,7 +70,7 @@ class AuthController with ChangeNotifier {
 
   Future signIn(String email, String password, context) async {
     try {
-      await auth
+      final credential = await auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) {
         Navigator.of(context).pushAndRemoveUntil(

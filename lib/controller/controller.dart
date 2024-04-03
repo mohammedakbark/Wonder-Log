@@ -32,4 +32,11 @@ class Controller extends ChangeNotifier {
     placeNameController.clear();
     notifyListeners();
   }
+
+//  -------------nav
+  int selectedNavindex = 0;
+  changeNavIndex(value) {
+    selectedNavindex = value;
+    notifyListeners();
+  }
 }

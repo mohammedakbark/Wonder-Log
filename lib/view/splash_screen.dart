@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wanderlog/controller/controller.dart';
+import 'package:wanderlog/controller/fire_controller.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/view/navigation_bar.dart';
 import 'package:wanderlog/view/statrt_screen.dart';
@@ -18,9 +21,11 @@ class SplashScreen extends StatelessWidget {
             ),
             (route) => false);
       } else {
+        Provider.of<FireController>(context, listen: false)
+            .fetchCurrentUserData();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) =>  Navigation(),
+              builder: (context) => Navigation(),
             ),
             (route) => false);
       }

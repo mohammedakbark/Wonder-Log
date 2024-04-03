@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wanderlog/controller/auth_controller.dart';
 import 'package:wanderlog/controller/controller.dart';
+import 'package:wanderlog/controller/fire_controller.dart';
 import 'package:wanderlog/firebase_options.dart';
 import 'package:wanderlog/view/navigation_bar.dart';
 import 'package:wanderlog/view/splash_screen.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthController>(create: (_) => AuthController()),
-        ChangeNotifierProvider<Controller>(create: (_) => Controller())
+        ChangeNotifierProvider<Controller>(create: (_) => Controller()),
+        ChangeNotifierProvider<FireController>(create: (_) => FireController())
       ],
       child: MaterialApp(
           title: 'Flutter Demo',
