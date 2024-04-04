@@ -48,7 +48,7 @@ class AuthController with ChangeNotifier {
           .then((credential) {
         Provider.of<FireController>(context, listen: false)
             .addUser(credential.user!.uid,
-                UserModel(bio: "", email: email, imageUrl: "", name: name))
+                UserModel(bio: "", email: email, imageUrl: "", name: name,description: ""))
             .then((value) {
           clearController();
           successSnackBar(context, "Registration successful");

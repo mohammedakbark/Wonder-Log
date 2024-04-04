@@ -113,8 +113,8 @@ class SignInScreen extends StatelessWidget {
                         onPressed: () {
                           // if (_formKey.currentState!.validate()) {
                           authController.signIn(
-                              authController.emailcontroller.text,
-                              authController.passwordcontroller.text,
+                              authController.emailcontroller.text.trim(),
+                              authController.passwordcontroller.text.trim(),
                               context); // }
                         },
                         text: "Sign In",
