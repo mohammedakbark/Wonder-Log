@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wanderlog/model/new_post.dart';
+import 'package:wanderlog/model/review_model.dart';
 import 'package:wanderlog/model/user_model.dart';
 import 'package:wanderlog/util/snack_bar.dart';
 
@@ -14,7 +15,7 @@ class FireController with ChangeNotifier {
   final db = FirebaseFirestore.instance;
 //---------------pickeImage
   File? fileImage;
-  
+
   String? _url;
 
   final _imagePicker = ImagePicker();
@@ -57,8 +58,6 @@ class FireController with ChangeNotifier {
     return _url;
   }
 
-  
-
 //-----------create
   Future addUser(String uid, UserModel userModel) async {
     db.collection("User").doc(uid).set(userModel.tojson(uid));
@@ -67,6 +66,11 @@ class FireController with ChangeNotifier {
   Future addNewPost(AddNewPost addNewPost) async {
     final doc = db.collection("Post").doc();
     doc.set(addNewPost.toJson(doc.id));
+  }
+
+  Future addNewReview(postId, ReviewModel reviewModel) async {
+    final reviwdoc = db.collection("Comment").doc();
+    reviwdoc.set(reviewModel.toJson(reviwdoc.id));
   }
 //-------------delete
 
@@ -92,6 +96,24 @@ class FireController with ChangeNotifier {
   }
 
 //-----------read
+  UserModel? selecteduserData;
+  Future fechSelectedUserData(uid) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("User").doc(uid).get();
+    if (snapshot.exists) {
+      selecteduserData = UserModel.fromJson(snapshot.data()!);
+    }
+  }
+
+  double rating = 0;
+  fetchSelectedPostRating(postId) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("Post").doc(postId).get();
+    if (snapshot.exists) {
+      rating = snapshot.data()!["rating"];
+    }
+  }
+
   UserModel? currentUserData;
   Future fetchCurrentUserData() async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await db
@@ -101,5 +123,28 @@ class FireController with ChangeNotifier {
     if (snapshot.exists) {
       currentUserData = UserModel.fromJson(snapshot.data()!);
     }
+  }
+
+  List<AddNewPost> listOfPost = [];
+  Future fetchAllPost(bool listen) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("Post").get();
+    listOfPost = snapshot.docs.map((e) {
+      return AddNewPost.fromJson(e.data());
+    }).toList();
+    if (listen) {
+      notifyListeners();
+    }
+  }
+
+  List<ReviewModel> myReviews = [];
+  Future fetchCurrentUSerComments() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db
+        .collection("Comment")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    myReviews = snapshot.docs.map((e) {
+      return ReviewModel.fromJson(e.data());
+    }).toList();
   }
 }

@@ -12,24 +12,26 @@ class Controller extends ChangeNotifier {
   final _imagePicker = ImagePicker();
   SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
   Future<File> pickPostImage() async {
-    // isLoading = true;
+    isLoading = true;
+    notifyListeners();
     final pickedXfile =
         await _imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedXfile != null) {
       return newPost = File(pickedXfile.path);
     }
     print(newPost);
+
     notifyListeners();
-    // isLoading = false;
+
     return newPost!;
   }
 
-  //----------Serching
-  TextEditingController serchController = TextEditingController();
-  clearsearchField() {
-    serchController.clear();
+  cancelIndicator() {
+    isLoading = false;
     notifyListeners();
   }
+
+  //----------Serching
 
 //--------------edit profile
 
@@ -44,6 +46,12 @@ class Controller extends ChangeNotifier {
   int selectedNavindex = 0;
   changeNavIndex(value) {
     selectedNavindex = value;
+    notifyListeners();
+  }
+
+  double rating = 0;
+  updaterating(value) {
+    rating = value;
     notifyListeners();
   }
 }

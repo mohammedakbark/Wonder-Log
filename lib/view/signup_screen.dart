@@ -54,6 +54,7 @@ class SignUpScreen extends StatelessWidget {
                       height: height * .08,
                     ),
                     customeTextField(
+                      textCapitalization: TextCapitalization.words,
                         controller: authController.nameController,
                         validator: (value) {
                           if (value!.isEmpty) {

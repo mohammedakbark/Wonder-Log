@@ -41,6 +41,7 @@ class AddNewRequestPage extends StatelessWidget {
                     if (placeDecController.text.isNotEmpty ||
                         placeNameController.text.isNotEmpty) {
                       if (fileImage != null) {
+                        showLoadingIndicator(context, "Please wait...");
                         firController.urlGenarator(fileImage).then((url) {
                           firController
                               .addNewPost(AddNewPost(
@@ -54,7 +55,9 @@ class AddNewRequestPage extends StatelessWidget {
                             clearRequest();
                             successSnackBar(
                                 context, "Your request is submitted");
-                            Navigator.of(context).pop();
+                            final nav = Navigator.of(context);
+                            nav.pop();
+                            nav.pop();
                           });
                         });
                       } else {
@@ -81,33 +84,34 @@ class AddNewRequestPage extends StatelessWidget {
                   onTap: () {
                     controller.pickPostImage().then((file) {
                       fileImage = file;
+                      controller.cancelIndicator();
                       print(fileImage);
                     });
                   },
                   child: Container(
-                          height: height * .16,
-                          width: width * .7,
-                          decoration: BoxDecoration(
-                              image: fileImage != null
-                                  ? DecorationImage(
-                                      image: FileImage(fileImage!))
-                                  : null,
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.add,
-                                size: 33,
-                              ),
-                              Text(
-                                "Add Image",
-                                style: nunitoStyle(),
-                              )
-                            ],
-                          ),
+                    height: height * .16,
+                    width: width * .7,
+                    decoration: BoxDecoration(
+                        image: fileImage != null
+                            ? DecorationImage(
+                                fit: BoxFit.fill, image: FileImage(fileImage!))
+                            : null,
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          size: 33,
                         ),
+                        Text(
+                          "Add Image",
+                          style: nunitoStyle(),
+                        )
+                      ],
+                    ),
+                  ),
                 );
               }),
               SizedBox(
@@ -117,6 +121,7 @@ class AddNewRequestPage extends StatelessWidget {
                 return Column(
                   children: [
                     TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       controller: placeNameController,
                       decoration: InputDecoration(
                           hintText: "Place",
@@ -138,6 +143,7 @@ class AddNewRequestPage extends StatelessWidget {
                     TextFormField(
                       maxLines: 10,
                       controller: placeDecController,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                           hintText: "Description",
                           hintStyle: normalStyle(letterSpacing: 1),

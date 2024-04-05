@@ -20,7 +20,7 @@ class _NavigationState extends State<Navigation> {
     return [
       HomeTab(),
       const NotificationTab(),
-      const LocationTab(),
+       LocationTab(),
       const ProfileTab()
     ];
   }

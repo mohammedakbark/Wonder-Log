@@ -10,8 +10,8 @@ import 'package:wanderlog/view/widgets/button.dart';
 import 'package:wanderlog/view/widgets/rating_bar.dart';
 
 class LocationTab extends StatelessWidget {
-  const LocationTab({super.key});
-
+  LocationTab({super.key});
+  var searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -30,7 +30,7 @@ class LocationTab extends StatelessWidget {
         child: Column(children: [
           Consumer<Controller>(builder: (context, controller, _) {
             return TextFormField(
-              controller: controller.serchController,
+              controller: searchController,
               decoration: InputDecoration(
                   suffixIcon: const Icon(
                     Icons.search_rounded,
@@ -103,8 +103,13 @@ class LocationTab extends StatelessWidget {
                                       onTap: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SingleItemPage(),
+                                          builder: (context) => SingleItemPage(
+                                            uid: "",
+                                            postId: "",
+                                            subtitle: "",
+                                            title: "",
+                                            url: "",
+                                          ),
                                         ));
                                       })
                                 ],
