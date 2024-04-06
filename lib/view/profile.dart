@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/style.dart';
 import 'package:wanderlog/view/edit_profile_page.dart';
 import 'package:wanderlog/view/widgets/button.dart';
+import 'package:wanderlog/view/widgets/no_data.dart';
 import 'package:wanderlog/view/widgets/shimmer_effect.dart';
 
 class ProfileTab extends StatelessWidget {
@@ -25,13 +27,14 @@ class ProfileTab extends StatelessWidget {
           children: [
             Consumer<FireController>(builder: (context, fireController, _) {
               return FutureBuilder(
-                  future: fireController.fetchCurrentUserData(),
+                  future: fireController.fechSelectedUserData(
+                      FirebaseAuth.instance.currentUser!.uid),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return shimmerEffectForProfile(
                           height, width, true, context);
                     }
-                    final data = fireController.currentUserData;
+                    final data = fireController.selecteduserData;
                     return Row(
                       children: [
                         Container(
@@ -102,33 +105,77 @@ class ProfileTab extends StatelessWidget {
             SizedBox(
               height: height * .02,
             ),
-            Expanded(
-                child: GridView.builder(
-              itemCount: 10,
-              gridDelegate: SliverQuiltedGridDelegate(
-                crossAxisCount: 2,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
-                repeatPattern: QuiltedGridRepeatPattern.inverted,
-                pattern: [
-                  const QuiltedGridTile(2, 1),
-                  const QuiltedGridTile(1, 1),
-                  const QuiltedGridTile(1, 1),
+            Consumer<FireController>(builder: (context, firecontroller, child) {
+              return FutureBuilder(
+                  future: firecontroller.fechOnlySelectedUserPosts(
+                      FirebaseAuth.instance.currentUser!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Expanded(
+                          child: shimmerEffect(
+                        child: GridView.builder(
+                          itemCount: 10,
+                          gridDelegate: SliverQuiltedGridDelegate(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20,
+                            repeatPattern: QuiltedGridRepeatPattern.inverted,
+                            pattern: [
+                              const QuiltedGridTile(2, 1),
+                              const QuiltedGridTile(1, 1),
+                              const QuiltedGridTile(1, 1),
+                            ],
+                          ),
+                          itemBuilder: (context, index) {
+                            return const Card();
+                          },
+                        ),
+                      ));
+                    }
+                    final post = firecontroller.selectedUserPost;
+                    return Expanded(
+                        child: post.isEmpty
+                            ? const Center(
+                                child: NoData(),
+                              )
+                            : GridView.builder(
+                                itemCount: post.length,
+                                gridDelegate: SliverQuiltedGridDelegate(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 20,
+                                  crossAxisSpacing: 20,
+                                  repeatPattern:
+                                      QuiltedGridRepeatPattern.inverted,
+                                  pattern: [
+                                    const QuiltedGridTile(2, 1),
+                                    const QuiltedGridTile(1, 1),
+                                    const QuiltedGridTile(1, 1),
 
-                  // QuiltedGridTile(2, 2),
-                  // QuiltedGridTile(2, 2),
-                ],
-              ),
-              itemBuilder: (context, index) {
-                return const Card();
-              },
-              // childrenDelegate: SliverChildBuilderDelegate(
-              //   (context, index) => Container(
-              //     color: Colors.red,
-              //     child: Center(child: Text(index.toString())),
-              //   ),
-              // ),
-            ))
+                                    // QuiltedGridTile(2, 2),
+                                    // QuiltedGridTile(2, 2),
+                                  ],
+                                ),
+                                itemBuilder: (context, index) {
+                                  return ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
+                                    child: SizedBox(
+                                      child: Image.network(
+                                        post[index].imageUrl,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                // childrenDelegate: SliverChildBuilderDelegate(
+                                //   (context, index) => Container(
+                                //     color: Colors.red,
+                                //     child: Center(child: Text(index.toString())),
+                                //   ),
+                                // ),
+                              ));
+                  });
+            })
           ],
         ),
       ),

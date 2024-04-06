@@ -54,4 +54,14 @@ class Controller extends ChangeNotifier {
     rating = value;
     notifyListeners();
   }
+
+  clearReating() {
+    rating = 0;
+  }
+
+  bool isSerchEnable = false;
+  enableOrDisableSearch(bool value) {
+    isSerchEnable = value;
+    notifyListeners();
+  }
 }

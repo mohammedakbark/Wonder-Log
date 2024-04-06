@@ -25,7 +25,6 @@ class About extends StatelessWidget {
           child: InkWell(
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
             },
             child: Container(
                 decoration: BoxDecoration(

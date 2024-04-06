@@ -1,39 +1,39 @@
-class ReviewModel {
-  double rating;
-  String? reviewId;
-  String uid;
+class CommentModel {
+  String? commentId;
+  String commentedUserId;
+  String postOwnnerId;
   String postId;
-  String review;
+  String comment;
   String date;
   String time;
 
-  ReviewModel(
+  CommentModel(
       {required this.date,
-     this. reviewId,
+      this.commentId,
+      required this.commentedUserId,
       required this.postId,
-      required this.rating,
-      required this.review,
+      required this.comment,
       required this.time,
-      required this.uid});
+      required this.postOwnnerId});
 
   Map<String, dynamic> toJson(id) => {
-        "rating": rating,
-        "reviewId":id,
-        "uid": uid,
+        "commentId": id,
+        "commentedUserId":commentedUserId,
+        "postOwnnerId": postOwnnerId,
         "postId": postId,
-        "review": review,
+        "comment": comment,
         "date": date,
         "time": time
       };
 
-  factory ReviewModel.fromJson(Map<String, dynamic> json) {
-    return ReviewModel(
+  factory CommentModel.fromJson(Map<String, dynamic> json) {
+    return CommentModel(
         date: json["date"],
-        reviewId:json["reviewId"],
+        commentId: json["commentId"],
+        commentedUserId:json["commentedUserId"],
         postId: json["postId"],
-        rating: json["rating"],
-        review: json["review"],
+        comment: json["comment"],
         time: json["time"],
-        uid: json["uid"]);
+        postOwnnerId: json["postOwnnerId"]);
   }
 }

@@ -1,5 +1,6 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wanderlog/controller/fire_controller.dart';
 import 'package:wanderlog/util/colors.dart';
@@ -58,14 +59,15 @@ class EditProfilePage extends StatelessWidget {
               child: Column(
                 children: [
                   FutureBuilder(
-                      future: fireController.fetchCurrentUserData(),
+                      future: fireController.fechSelectedUserData(
+                          FirebaseAuth.instance.currentUser!.uid),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return shimmerEffectForProfile(
                               height, width, false, context);
                         }
-                        final data = fireController.currentUserData;
+                        final data = fireController.selecteduserData;
                         return Row(
                           children: [
                             InkWell(
@@ -144,6 +146,7 @@ class EditProfilePage extends StatelessWidget {
                   Column(
                     children: [
                       TextFormField(
+                        textCapitalization: TextCapitalization.words,
                         controller: editiNameController,
                         decoration: InputDecoration(
                             hintText: "Name",
@@ -163,6 +166,7 @@ class EditProfilePage extends StatelessWidget {
                         height: height * .01,
                       ),
                       TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
                         controller: editiDesController,
                         decoration: InputDecoration(
                             hintText: "Description",
@@ -185,6 +189,7 @@ class EditProfilePage extends StatelessWidget {
                         maxLines: 5,
                         onFieldSubmitted: (value) {},
                         controller: editiBioController,
+                        textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
                             hintText: "Bio",
                             hintStyle: normalStyle(letterSpacing: 1),

@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:provider/provider.dart';
@@ -15,6 +14,7 @@ import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/snack_bar.dart';
 import 'package:wanderlog/util/style.dart';
 import 'package:wanderlog/view/about.dart';
+import 'package:wanderlog/view/navigation_bar.dart';
 import 'package:wanderlog/view/new_request_page.dart';
 import 'package:wanderlog/view/notification.dart';
 import 'package:wanderlog/view/profile.dart';
@@ -22,6 +22,7 @@ import 'package:wanderlog/view/single_item_page.dart';
 import 'package:wanderlog/view/splash_screen.dart';
 import 'package:wanderlog/view/widgets/button.dart';
 import 'package:wanderlog/view/privacy.dart';
+import 'package:wanderlog/view/widgets/no_data.dart';
 import 'package:wanderlog/view/widgets/rating_bar.dart';
 import 'package:wanderlog/view/widgets/shimmer_effect.dart';
 
@@ -113,8 +114,8 @@ class HomeTab extends StatelessWidget {
                 )
               ],
             )),
-        body:
-            Consumer<FireController>(builder: (context, firController, child) {
+        body: Consumer2<FireController, Controller>(
+            builder: (context, firController, controller, child) {
           return RefreshIndicator.adaptive(
             color: DARK_BLUE_COLOR,
             onRefresh: () {
@@ -148,7 +149,13 @@ class HomeTab extends StatelessWidget {
                   ),
                 ],
                 title: TextFormField(
+                  onTap: () {
+                    firController.fetchAllPost(true);
+                  },
                   controller: serchController,
+                  onChanged: (value) {
+                    firController.serchPlace(value);
+                  },
                   decoration: InputDecoration(
                       suffixIcon: const Icon(
                         Icons.search_rounded,
@@ -166,141 +173,245 @@ class HomeTab extends StatelessWidget {
                   preferredSize: Size.fromHeight(height * .1),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Rating",
-                          style: nunitoStyle(
-                              color: BLACK,
-                              fontsize: 22,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 10, bottom: 10),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: GREY.withOpacity(.1),
-                                    spreadRadius: 2,
-                                    blurRadius: 2,
-                                    offset: const Offset(0, 0))
-                              ],
-                              color: WHITE,
-                              borderRadius: BorderRadius.circular(20)),
-                          width: width,
-                          height: height * .12,
-                          child: Row(
+                    child: FutureBuilder(
+                        future: firController.fetchGreaterThan3ratingPost(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return shimmerEffect(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: height * .1,
+                                    width: 100,
+                                    margin: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                  ),
+                                  SizedBox(
+                                    height: height * .1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: height * .005,
+                                        ),
+                                        shimmerPlaceholder(
+                                            height: height * .01,
+                                            width: width * .5),
+                                        SizedBox(
+                                          height: height * .005,
+                                        ),
+                                        shimmerPlaceholder(
+                                            height: height * .01,
+                                            width: width * .3),
+                                        const Expanded(child: SizedBox()),
+                                        Row(
+                                          children: [
+                                            shimmerPlaceholder(
+                                                height: height * .01,
+                                                width: width * .06),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            constRatingBar(
+                                                starLength.toDouble())
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          final topRate = firController.topRatedList;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: height * .1,
-                                width: 100,
-                                margin: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(15)),
+                              Text(
+                                "Rating",
+                                style: nunitoStyle(
+                                    color: BLACK,
+                                    fontsize: 22,
+                                    fontWeight: FontWeight.w500),
                               ),
-                              SizedBox(
-                                height: height * .1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Bajra Sandhi Monumnet",
-                                      style: nunitoStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontsize: 17),
-                                    ),
-                                    SizedBox(
-                                      height: height * .005,
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.location_pin,
-                                          color: GREY,
-                                          size: 18,
-                                        ),
-                                        Text(
-                                          "Panjeri, South Denpas",
-                                          style: nunitoStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontsize: 15,
-                                            color: GREY,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    const Expanded(child: SizedBox()),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "3.3 KM",
-                                          style: nunitoStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontsize: 16,
-                                            color: GREY,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        constRatingBar(starLength.toDouble())
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => SingleItemPage(
-                                        uid: "",
-                                        postId: "",
-                                        subtitle: "",
-                                        title: "",
-                                        url: "",
+                              topRate.isEmpty
+                                  ? SizedBox(
+                                      width: width,
+                                      height: height * .12,
+                                      child: shimmerEffect(
+                                        child: Lottie.asset(
+                                            "assets/no data.json",
+                                            height: height * .08),
                                       ),
-                                    ));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: APP_THEME_COLOR,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(7))),
-                                  child: Text(
-                                    "More",
-                                    style: nunitoStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: WHITE),
-                                  ))
+                                    )
+                                  : FlutterCarousel.builder(
+                                      itemCount: topRate.length,
+                                      options: CarouselOptions(
+                                        autoPlay: true,
+                                        viewportFraction: .99,
+                                        autoPlayAnimationDuration:
+                                            const Duration(milliseconds: 1000),
+                                        height: height * .12,
+                                      ),
+                                      itemBuilder:
+                                          (context, index, realIndex) =>
+                                              Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, bottom: 10, right: 10),
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: GREY.withOpacity(.1),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 2,
+                                                  offset: const Offset(0, 0))
+                                            ],
+                                            color: WHITE,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        width: width,
+                                        height: height * .12,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: height * .1,
+                                              width: 100,
+                                              margin: const EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  color: GREY.shade300,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.fill,
+                                                      image: NetworkImage(
+                                                          topRate[index]
+                                                              .imageUrl)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15)),
+                                            ),
+                                            SizedBox(
+                                              height: height * .1,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    topRate[index].placeName,
+                                                    style: nunitoStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontsize: 17),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height * .005,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.location_pin,
+                                                        color: GREY,
+                                                        size: 18,
+                                                      ),
+                                                      Text(
+                                                        topRate[index]
+                                                            .placeName,
+                                                        style: nunitoStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontsize: 15,
+                                                          color: GREY,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  const Expanded(
+                                                      child: SizedBox()),
+                                                  constRatingBar(
+                                                      topRate[index].rating),
+                                                ],
+                                              ),
+                                            ),
+                                            const Expanded(child: SizedBox()),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SingleItemPage(
+                                                      uid: topRate[index].uid,
+                                                      rating:
+                                                          topRate[index].rating,
+                                                      postId: topRate[index]
+                                                          .placeId!,
+                                                      subtitle: topRate[index]
+                                                          .placeDescription,
+                                                      title: topRate[index]
+                                                          .placeName,
+                                                      url: topRate[index]
+                                                          .imageUrl,
+                                                    ),
+                                                  ));
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        APP_THEME_COLOR,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        7))),
+                                                child: Text(
+                                                  "More",
+                                                  style: nunitoStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: WHITE),
+                                                )),
+                                            SizedBox(
+                                              width: width * .02,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
                             ],
-                          ),
-                        ),
-                      ],
-                    ),
+                          );
+                        }),
                   ),
                 ),
               ),
-              SliverFillViewport(
-                  padEnds: false,
-                  viewportFraction: .04,
-                  delegate: SliverChildListDelegate([
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                      ),
-                      child: Text(
-                        "Recent",
-                        style: nunitoStyle(
-                            color: BLACK,
-                            fontsize: 22,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ])),
+              controller.isSerchEnable
+                  ? SliverFillViewport(
+                      delegate: SliverChildListDelegate([
+                      Container(
+                        color: Colors.red,
+                        height: height,
+                        width: width,
+                      )
+                    ]))
+                  : SliverFillViewport(
+                      padEnds: false,
+                      viewportFraction: .04,
+                      delegate: SliverChildListDelegate([
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                          ),
+                          child: Text(
+                            "Recent",
+                            style: nunitoStyle(
+                                color: BLACK,
+                                fontsize: 22,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ])),
               FutureBuilder(
                   future: firController.fetchAllPost(false),
                   builder: (context, snasphot) {
@@ -314,21 +425,11 @@ class HomeTab extends StatelessWidget {
                       return SliverFillViewport(
                           padEnds: false,
                           viewportFraction: 1 / 2,
-                          delegate: SliverChildListDelegate([
-                            shimmerEffect(
-                              child: Column(
-                                children: [
-                                  Lottie.asset("assets/no data.json"),
-                                  Text(
-                                    "No Data",
-                                    style: poppinStyle(letterSpacing: 1),
-                                  )
-                                ],
-                              ),
-                            )
-                          ]));
+                          delegate: SliverChildListDelegate([const NoData()]));
                     }
-                    final post = firController.listOfPost;
+                    final post = firController.searchList.isEmpty
+                        ? firController.listOfPost
+                        : firController.searchList;
 
                     return SliverList(
                         delegate: SliverChildBuilderDelegate(
@@ -424,6 +525,7 @@ class HomeTab extends StatelessWidget {
                                             .push(MaterialPageRoute(
                                           builder: (context) => SingleItemPage(
                                             uid: post[index].uid,
+                                            rating: post[index].rating,
                                             postId: post[index].placeId!,
                                             url: post[index].imageUrl,
                                             subtitle:

@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
+import 'package:wanderlog/controller/fire_controller.dart';
+import 'package:wanderlog/model/user_model.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/style.dart';
-
+import 'package:wanderlog/view/widgets/shimmer_effect.dart';
 
 class SelectedProfileDetail extends StatelessWidget {
-  const SelectedProfileDetail({super.key});
+  UserModel userModel;
+  SelectedProfileDetail({super.key, required this.userModel});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +30,16 @@ class SelectedProfileDetail extends StatelessWidget {
                 Container(
                   height: height * .1,
                   width: width * .25,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(
-                              "https://s3-alpha-sig.figma.com/img/9002/a10e/92afc22c4fb716d785abc2f63fd808a6?Expires=1712534400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YFsvQsggoNN5ZWRR1Zx6RRfJYru4m-B~bq3~3QTSR068ikBjwFLaiDi~OAVhM-qxEwQsaT9P2cjrVY~3ewqFDXqMijtpanjNprUiZUpVx5Bb7kIDgik8sQqg1TfoxAPl9JA~QAcD8Lc0HLVS74imRFFpFyS-5VPRwg8BUYNaRzZJtNO-g~oTTrvxjqB09rmstcpbuj3FSCwkLalhGlfHBXRaPcHQJUuP1a7vOXIlQBpqO~PFS-ok7zjtIbyG0S1k33E1cQF4Zc~6RIFR0TkgkaK9ICyICCsjed~FYqDyj06m1gUmO5xPSPRalVJR48e3NY0AY1jaBxDyoYJ5JTBGTQ__")),
+                  decoration: BoxDecoration(
+                      image: userModel.imageUrl.isEmpty
+                          ? const DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage("assets/noprofile.png"))
+                          : DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(userModel.imageUrl)),
                       // color: DARK_BLUE_COLOR,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           topLeft: Radius.elliptical(40, 50),
                           bottomRight: Radius.elliptical(69, 90),
                           topRight: Radius.elliptical(60, 30),
@@ -46,25 +54,17 @@ class SelectedProfileDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Lakshmi Menon",
+                        userModel.name,
                         style: poppinStyle(
                             fontWeight: FontWeight.w600, fontsize: 25),
                       ),
                       Text(
-                        "Travel Vlogar",
+                        userModel.description,
                         style: poppinStyle(
                             fontWeight: FontWeight.w600, fontsize: 15),
                       ),
                       Text(
-                        "Adventuring through life, one mountain at a time ⛰️",
-                        // overflow: TextOverflow.ellipsis,
-                        style: poppinStyle(
-                          fontWeight: FontWeight.w500,
-                          fontsize: 12,
-                        ),
-                      ),
-                      Text(
-                        "Collecting memories, not things 🌄",
+                        userModel.bio,
                         // overflow: TextOverflow.ellipsis,
                         style: poppinStyle(
                           fontWeight: FontWeight.w500,
@@ -82,37 +82,75 @@ class SelectedProfileDetail extends StatelessWidget {
             SizedBox(
               height: height * .02,
             ),
-            Expanded(
-                child: GridView.builder(
-              itemCount: 10,
-              gridDelegate: SliverQuiltedGridDelegate(
-                crossAxisCount: 2,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
-                repeatPattern: QuiltedGridRepeatPattern.inverted,
-                pattern: [
-                  const QuiltedGridTile(2, 1),
-                  const QuiltedGridTile(1, 1),
-                  const QuiltedGridTile(1, 1),
+            Consumer<FireController>(builder: (context, firecontroller, child) {
+              return FutureBuilder(
+                  future:
+                      firecontroller.fechOnlySelectedUserPosts(userModel.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Expanded(
+                          child: shimmerEffect(
+                        child: GridView.builder(
+                          itemCount: 10,
+                          gridDelegate: SliverQuiltedGridDelegate(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20,
+                            repeatPattern: QuiltedGridRepeatPattern.inverted,
+                            pattern: [
+                              const QuiltedGridTile(2, 1),
+                              const QuiltedGridTile(1, 1),
+                              const QuiltedGridTile(1, 1),
+                            ],
+                          ),
+                          itemBuilder: (context, index) {
+                            return const Card();
+                          },
+                        ),
+                      ));
+                    }
+                    final post = firecontroller.selectedUserPost;
+                    return Expanded(
+                        child: GridView.builder(
+                      itemCount: post.length,
+                      gridDelegate: SliverQuiltedGridDelegate(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 20,
+                        repeatPattern: QuiltedGridRepeatPattern.inverted,
+                        pattern: [
+                          const QuiltedGridTile(2, 1),
+                          const QuiltedGridTile(1, 1),
+                          const QuiltedGridTile(1, 1),
 
-                  // QuiltedGridTile(2, 2),
-                  // QuiltedGridTile(2, 2),
-                ],
-              ),
-              itemBuilder: (context, index) {
-                return const Card();
-              },
-              // childrenDelegate: SliverChildBuilderDelegate(
-              //   (context, index) => Container(
-              //     color: Colors.red,
-              //     child: Center(child: Text(index.toString())),
-              //   ),
-              // ),
-            ))
+                          // QuiltedGridTile(2, 2),
+                          // QuiltedGridTile(2, 2),
+                        ],
+                      ),
+                      itemBuilder: (context, index) {
+                        return ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                          child: SizedBox(
+                            child: Image.network(
+                              post[index].imageUrl,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        );
+                      },
+                      // childrenDelegate: SliverChildBuilderDelegate(
+                      //   (context, index) => Container(
+                      //     color: Colors.red,
+                      //     child: Center(child: Text(index.toString())),
+                      //   ),
+                      // ),
+                    ));
+                  });
+            })
           ],
         ),
       ),
     );
   }
-  
 }

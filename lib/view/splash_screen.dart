@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
             (route) => false);
       } else {
         Provider.of<FireController>(context, listen: false)
-            .fetchCurrentUserData();
+            .fetchSelectedPostRating(FirebaseAuth.instance.currentUser!.uid);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => Navigation(),
