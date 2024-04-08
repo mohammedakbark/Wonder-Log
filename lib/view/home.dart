@@ -455,7 +455,7 @@ class HomeTab extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20)),
                                 child: FutureBuilder(
                                     future: firController
-                                        .fechSelectedUserData(post[index].uid),
+                                        .fechSelectedUserData(post[index].uid,),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {

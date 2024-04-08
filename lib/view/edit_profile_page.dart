@@ -60,7 +60,7 @@ class EditProfilePage extends StatelessWidget {
                 children: [
                   FutureBuilder(
                       future: fireController.fechSelectedUserData(
-                          FirebaseAuth.instance.currentUser!.uid),
+                          FirebaseAuth.instance.currentUser!.uid,),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {

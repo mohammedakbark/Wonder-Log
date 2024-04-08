@@ -10,8 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wanderlog/model/new_post.dart';
 import 'package:wanderlog/model/review_model.dart';
 import 'package:wanderlog/model/user_model.dart';
-import 'package:wanderlog/util/snack_bar.dart';
-import 'package:wanderlog/view/new_request_page.dart';
 
 class FireController with ChangeNotifier {
   final db = FirebaseFirestore.instance;
@@ -169,12 +167,29 @@ class FireController with ChangeNotifier {
 
 //-----------read
   UserModel? selecteduserData;
-  Future fechSelectedUserData(uid) async {
+  Future<bool> fechSelectedUserData(
+    uid,
+  ) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await db.collection("User").doc(uid).get();
+
     if (snapshot.exists) {
       selecteduserData = UserModel.fromJson(snapshot.data()!);
+      return true;
+    } else {
+      return false;
     }
+
+    // if (snapshot.exists) {
+    //   selecteduserData = UserModel.fromJson(snapshot.data()!);
+    // } else {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) =>  AlertDialog(
+    //       content: Text("data"),
+    //     ),
+    //   );
+    // }
   }
 
   double rating = 0;

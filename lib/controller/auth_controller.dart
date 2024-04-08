@@ -47,8 +47,14 @@ class AuthController with ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((credential) {
         Provider.of<FireController>(context, listen: false)
-            .addUser(credential.user!.uid,
-                UserModel(bio: "", email: email, imageUrl: "", name: name,description: ""))
+            .addUser(
+                credential.user!.uid,
+                UserModel(
+                    bio: "",
+                    email: email,
+                    imageUrl: "",
+                    name: name,
+                    description: ""))
             .then((value) {
           clearController();
           successSnackBar(context, "Registration successful");
@@ -72,12 +78,22 @@ class AuthController with ChangeNotifier {
     try {
       final credential = await auth
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => Navigation(),
-            ),
-            (route) => false);
+          .then((cred) {
+        Provider.of<FireController>(context, listen: false)
+            .fechSelectedUserData(
+          cred.user!.uid,
+        )
+            .then((value) {
+          if (value == true) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => Navigation(),
+                ),
+                (route) => false);
+          } else {
+            showDeleteCredentialmessage(context);
+          }
+        });
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

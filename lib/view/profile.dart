@@ -28,7 +28,7 @@ class ProfileTab extends StatelessWidget {
             Consumer<FireController>(builder: (context, fireController, _) {
               return FutureBuilder(
                   future: fireController.fechSelectedUserData(
-                      FirebaseAuth.instance.currentUser!.uid),
+                      FirebaseAuth.instance.currentUser!.uid,),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return shimmerEffectForProfile(

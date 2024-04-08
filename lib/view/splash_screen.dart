@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:wanderlog/controller/controller.dart';
 import 'package:wanderlog/controller/fire_controller.dart';
 import 'package:wanderlog/util/colors.dart';
+import 'package:wanderlog/util/snack_bar.dart';
+import 'package:wanderlog/util/style.dart';
 import 'package:wanderlog/view/navigation_bar.dart';
 import 'package:wanderlog/view/statrt_screen.dart';
 import 'package:wanderlog/view/widgets/app_logo.dart';
@@ -13,6 +15,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FirebaseAuth.instance.signOut();
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (FirebaseAuth.instance.currentUser == null) {
         Navigator.of(context).pushAndRemoveUntil(
@@ -22,12 +25,20 @@ class SplashScreen extends StatelessWidget {
             (route) => false);
       } else {
         Provider.of<FireController>(context, listen: false)
-            .fetchSelectedPostRating(FirebaseAuth.instance.currentUser!.uid);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => Navigation(),
-            ),
-            (route) => false);
+            .fechSelectedUserData(
+          FirebaseAuth.instance.currentUser!.uid,
+        )
+            .then((value) {
+          if (value == true) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => Navigation(),
+                ),
+                (route) => false);
+          } else {
+            showDeleteCredentialmessage(context);
+          }
+        });
       }
     });
 

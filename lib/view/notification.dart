@@ -54,7 +54,7 @@ class NotificationTab extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return FutureBuilder(
                               future: fireController.fechSelectedUserData(
-                                  myComment[index].commentedUserId),
+                                  myComment[index].commentedUserId,),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
