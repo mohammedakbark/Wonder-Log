@@ -5,6 +5,7 @@ import 'package:wanderlog/controller/auth_controller.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/const.dart';
 import 'package:wanderlog/util/style.dart';
+import 'package:wanderlog/view/privacy.dart';
 import 'package:wanderlog/view/signup_screen.dart';
 import 'package:wanderlog/view/widgets/app_logo.dart';
 import 'package:wanderlog/view/widgets/button.dart';
@@ -98,7 +99,10 @@ class SignInScreen extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: customeTextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Privacy()));
+                        },
                         text: "Forget Password?",
                         textColor: DARK_BLUE_COLOR),
                   ),

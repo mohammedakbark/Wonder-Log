@@ -88,7 +88,7 @@ class HomeTab extends StatelessWidget {
                           title: "Privacy",
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const Privacy(),
+                              builder: (context) =>  Privacy(),
                             ));
                           }),
                       drawerButton(

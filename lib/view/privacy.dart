@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wanderlog/controller/controller.dart';
@@ -6,8 +8,8 @@ import 'package:wanderlog/util/snack_bar.dart';
 import 'package:wanderlog/util/style.dart';
 
 class Privacy extends StatelessWidget {
-  const Privacy({super.key});
-
+  Privacy({super.key});
+  var emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -18,20 +20,47 @@ class Privacy extends StatelessWidget {
         leadingWidth: 70,
         centerTitle: true,
         actions: [
-          Consumer<Controller>(builder: (context, controller, child) {
-            return TextButton(
-                onPressed: () {
-                  if (controller.emailController.text.isNotEmpty) {
-                    Navigator.of(context).pop();
+          TextButton(
+              onPressed: () {
+                if (emailController.text.isNotEmpty) {
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    if (emailController.text.trim() ==
+                        FirebaseAuth.instance.currentUser!.email) {
+                      FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: emailController.text)
+                          .then((value) {
+                        successSnackBar(context,
+                            "Password reset mail send to : ${emailController.text}");
+                        emailController.clear();
+                        Navigator.of(context).pop();
+                      });
+                    } else {
+                      errorSnackBar(
+                          context, "The email is not registerd email address");
+                    }
                   } else {
-                    errorSnackBar(context, "Oops,enter the email and proceed");
+                    try {
+                      FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: emailController.text)
+                          .then((value) {
+                        successSnackBar(context,
+                            "Password reset mail send to : ${emailController.text}");
+                        emailController.clear();
+                        Navigator.of(context).pop();
+                      });
+                    } catch (e) {
+                      errorSnackBar(context, e.toString());
+                    }
                   }
-                },
-                child: Text(
-                  "Reset",
-                  style: poppinStyle(color: BLACK, fontsize: 19),
-                ));
-          })
+                  // Navigator.of(context).pop();
+                } else {
+                  errorSnackBar(context, "Oops,enter the email and proceed");
+                }
+              },
+              child: Text(
+                "Reset",
+                style: poppinStyle(color: BLACK, fontsize: 19),
+              ))
         ],
         title: Text(
           "Privacy",
@@ -77,24 +106,22 @@ class Privacy extends StatelessWidget {
             SizedBox(
               height: height * .02,
             ),
-            Consumer<Controller>(builder: (context, controller, _) {
-              return TextFormField(
-                controller: controller.emailController,
-                decoration: InputDecoration(
-                    hintText: "Email",
-                    hintStyle: normalStyle(letterSpacing: 1),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(20)),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(20))),
-              );
-            }),
+            TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(
+                  hintText: "Email",
+                  hintStyle: normalStyle(letterSpacing: 1),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(20)),
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(20))),
+            ),
           ],
         ),
       ),

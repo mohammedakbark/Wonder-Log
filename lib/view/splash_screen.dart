@@ -15,12 +15,11 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FirebaseAuth.instance.signOut();
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (FirebaseAuth.instance.currentUser == null) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => GetStartScreen(),
+              builder: (context) => const GetStartScreen(),
             ),
             (route) => false);
       } else {
@@ -36,7 +35,16 @@ class SplashScreen extends StatelessWidget {
                 ),
                 (route) => false);
           } else {
-            showDeleteCredentialmessage(context);
+            FirebaseAuth.instance.signOut();
+             Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const GetStartScreen(),
+            ),
+            (route) => false);
+
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Login is expired")));
+            // showDeleteCredentialmessage(context);
           }
         });
       }
