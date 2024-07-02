@@ -47,7 +47,7 @@ class NotificationTab extends StatelessWidget {
                 }
                 final myComment = fireController.myReviews;
                 return myComment.isEmpty
-                    ? const Center(
+                    ? const Center( 
                         child: NoData(),
                       )
                     : ListView.separated(
@@ -69,8 +69,9 @@ class NotificationTab extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                             fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                                commenter!.imageUrl)),
+                                            image:  commenter!.imageUrl.isEmpty?AssetImage("assets/noprofile.png") as ImageProvider
+                                            :NetworkImage(
+                                                commenter.imageUrl)),
                                         // color: DARK_BLUE_COLOR,
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.elliptical(40, 50),

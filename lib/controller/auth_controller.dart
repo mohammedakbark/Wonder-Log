@@ -7,6 +7,7 @@ import 'package:wanderlog/model/user_model.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/snack_bar.dart';
 import 'package:wanderlog/util/style.dart';
+import 'package:wanderlog/view/home.dart';
 import 'package:wanderlog/view/navigation_bar.dart';
 import 'package:wanderlog/view/splash_screen.dart';
 
@@ -59,7 +60,7 @@ class AuthController with ChangeNotifier {
           clearController();
           successSnackBar(context, "Registration successful");
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => SplashScreen()),
+              MaterialPageRoute(builder: (context) => Navigation()),
               (route) => false);
         });
       });

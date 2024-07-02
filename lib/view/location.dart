@@ -137,6 +137,8 @@ class LocationTab extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return SizedBox(
                                 width: width,
+
+                                //changed here..................................................
                                 height: height * .12,
                                 child: Row(
                                   mainAxisAlignment:
@@ -156,32 +158,76 @@ class LocationTab extends StatelessWidget {
                                               BorderRadius.circular(15)),
                                     ),
                                     SizedBox(
-                                      // height: height * .1,
+                                      // height: height * .12,
                                       width: width * .6,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            post[index].placeName,
-                                            style: nunitoStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontsize: 25),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                post[index].placeName,
+                                                style: nunitoStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontsize: 25),
+                                              ),
+                                              Spacer(),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(4)),
+                                                  color: Colors.green,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    const CircleAvatar(
+                                                      radius: 8,
+                                                      backgroundColor: WHITE,
+                                                      child: Icon(
+                                                        size: 12,
+                                                        Icons
+                                                            .currency_rupee_rounded,
+                                                        color: Colors.green,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      post[index].amount,
+                                                      style: poppinStyle(
+                                                          color: WHITE),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
                                           ),
                                           SizedBox(
                                             height: height * .005,
                                           ),
-                                          Text(
-                                            post[index].placeDescription,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: nunitoStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontsize: 15,
-                                              color: GREY,
+                                          Flexible(
+                                            child: Text(
+                                              post[index].placeDescription,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: nunitoStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontsize: 15,
+                                                color: GREY,
+                                              ),
                                             ),
                                           ),
-                                          const Expanded(child: SizedBox()),
+                                          // const Expanded(child: SizedBox()),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,

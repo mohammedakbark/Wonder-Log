@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:developer';
+ 
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -204,10 +205,10 @@ class FireController with ChangeNotifier {
   List<AddNewPost> listOfPost = [];
   Future fetchAllPost(bool listen) async {
     final userData = await db
-        .collection("Post")
-        .where("uid", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid);
+        .collection("Post");
+       
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await userData.where("status", isEqualTo: "Approved").get();
+        await userData.get();
     listOfPost = snapshot.docs.map((e) {
       return AddNewPost.fromJson(e.data());
     }).toList();
@@ -223,9 +224,11 @@ class FireController with ChangeNotifier {
         .where("postOwnnerId",
             isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
+        
     myReviews = snapshot.docs.map((e) {
       return CommentModel.fromJson(e.data());
     }).toList();
+    log(snapshot.docs.length.toString());
   }
 
   List<AddNewPost> selectedUserPost = [];

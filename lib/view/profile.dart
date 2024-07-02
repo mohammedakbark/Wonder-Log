@@ -28,32 +28,40 @@ class ProfileTab extends StatelessWidget {
             Consumer<FireController>(builder: (context, fireController, _) {
               return FutureBuilder(
                   future: fireController.fechSelectedUserData(
-                      FirebaseAuth.instance.currentUser!.uid,),
+                    FirebaseAuth.instance.currentUser!.uid,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return shimmerEffectForProfile(
                           height, width, true, context);
                     }
+                    
                     final data = fireController.selecteduserData;
+
                     return Row(
                       children: [
                         Container(
                           height: height * .1,
                           width: width * .25,
                           decoration: BoxDecoration(
-                              image: data!.imageUrl.isEmpty
-                                  ? const DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage("assets/noprofile.png"))
-                                  : DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: NetworkImage(data
-                                          .imageUrl)), // color: DARK_BLUE_COLOR,
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.elliptical(40, 50),
-                                  bottomRight: Radius.elliptical(69, 90),
-                                  topRight: Radius.elliptical(60, 30),
-                                  bottomLeft: Radius.elliptical(60, 50))),
+                            image: data!.imageUrl.isEmpty
+                                ? const DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage("assets/noprofile.png"))
+                                : DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(data
+                                        .imageUrl)), // color: DARK_BLUE_COLOR,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.elliptical(40, 50),
+                              bottomRight: Radius.elliptical(69, 90),
+                              topRight: Radius.elliptical(60, 30),
+                              bottomLeft: Radius.elliptical(
+                                60,
+                                50,
+                              ),
+                            ),
+                          ),
                         ),
                         SizedBox(
                           width: width * .05,
@@ -64,7 +72,7 @@ class ProfileTab extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${data!.name.substring(0, 1).toUpperCase()}${data.name.substring(1)}",
+                                "${data.name.substring(0, 1).toUpperCase()}${data.name.substring(1)}",
                                 style: poppinStyle(
                                     fontWeight: FontWeight.w600, fontsize: 25),
                               ),
@@ -105,94 +113,77 @@ class ProfileTab extends StatelessWidget {
             SizedBox(
               height: height * .02,
             ),
-            Consumer<FireController>(builder: (context, firecontroller, child) {
-              return FutureBuilder(
-                  future: firecontroller.fechOnlySelectedUserPosts(
-                      FirebaseAuth.instance.currentUser!.uid),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Expanded(
-                          child: shimmerEffect(
-                        child: GridView.builder(
-                          itemCount: 10,
-                          gridDelegate: SliverQuiltedGridDelegate(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 20,
-                            repeatPattern: QuiltedGridRepeatPattern.inverted,
-                            pattern: [
-                              const QuiltedGridTile(2, 1),
-                              const QuiltedGridTile(1, 1),
-                              const QuiltedGridTile(1, 1),
-                            ],
+            Consumer<FireController>(
+              builder: (context, firecontroller, child) {
+                return FutureBuilder(
+                    future: firecontroller.fechOnlySelectedUserPosts(
+                        FirebaseAuth.instance.currentUser!.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Expanded(
+                            child: shimmerEffect(
+                          child: GridView.builder(
+                            itemCount: 10,
+                            gridDelegate: SliverQuiltedGridDelegate(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 20,
+                              crossAxisSpacing: 20,
+                              repeatPattern: QuiltedGridRepeatPattern.inverted,
+                              pattern: [
+                                const QuiltedGridTile(2, 1),
+                                const QuiltedGridTile(1, 1),
+                                const QuiltedGridTile(1, 1),
+                              ],
+                            ),
+                            itemBuilder: (context, index) {
+                              return const Card();
+                            },
                           ),
-                          itemBuilder: (context, index) {
-                            return const Card();
-                          },
-                        ),
-                      ));
-                    }
-                    final post = firecontroller.selectedUserPost;
-                    return Expanded(
-                        child: post.isEmpty
-                            ? const Center(
-                                child: NoData(),
-                              )
-                            : GridView.builder(
-                                itemCount: post.length,
-                                gridDelegate: SliverQuiltedGridDelegate(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 20,
-                                  crossAxisSpacing: 20,
-                                  repeatPattern:
-                                      QuiltedGridRepeatPattern.inverted,
-                                  pattern: [
-                                    const QuiltedGridTile(2, 1),
-                                    const QuiltedGridTile(1, 1),
-                                    const QuiltedGridTile(1, 1),
+                        ));
+                      }
+                      final post = firecontroller.selectedUserPost;
+                      return Expanded(
+                          child: post.isEmpty
+                              ? const Center(
+                                  child: NoData(),
+                                )
+                              : GridView.builder(
+                                  itemCount: post.length,
+                                  gridDelegate: SliverQuiltedGridDelegate(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 20,
+                                    crossAxisSpacing: 20,
+                                    repeatPattern:
+                                        QuiltedGridRepeatPattern.inverted,
+                                    pattern: [
+                                      const QuiltedGridTile(2, 1),
+                                      const QuiltedGridTile(1, 1),
+                                      const QuiltedGridTile(1, 1),
 
-                                    // QuiltedGridTile(2, 2),
-                                    // QuiltedGridTile(2, 2),
-                                  ],
-                                ),
-                                itemBuilder: (context, index) {
-                                  return ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: SizedBox(
-                                      child: Image.network(
-                                        post[index].imageUrl,
-                                        fit: BoxFit.fill,
+                                      // QuiltedGridTile(2, 2),
+                                      // QuiltedGridTile(2, 2),
+                                    ],
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
+                                      child: SizedBox(
+                                        child: Image.network(
+                                          post[index].imageUrl,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                // childrenDelegate: SliverChildBuilderDelegate(
-                                //   (context, index) => Container(
-                                //     color: Colors.red,
-                                //     child: Center(child: Text(index.toString())),
-                                //   ),
-                                // ),
-                              ));
-                  });
-            })
+                                    );
+                                  },
+                                ));
+                    });
+              },
+            )
           ],
         ),
       ),
-      // body: Shimmer.fromColors(
-      //     baseColor: Colors.grey.shade300,
-      //     highlightColor: Colors.grey.shade100,
-      //     enabled: true,
-      //     child: SingleChildScrollView(
-      //       physics: NeverScrollableScrollPhysics(),
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         mainAxisSize: MainAxisSize.max,
-      //         children: [
-
-      //         ],
-      //       ),
-      //     )),
+   
     );
   }
 }

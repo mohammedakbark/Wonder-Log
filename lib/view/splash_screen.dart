@@ -51,6 +51,7 @@ class SplashScreen extends StatelessWidget {
     });
 
     final width = MediaQuery.of(context).size.width;
+    
 
     return Scaffold(
         backgroundColor: APP_THEME_COLOR,

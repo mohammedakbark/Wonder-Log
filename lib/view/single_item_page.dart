@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +67,9 @@ class SingleItemPage extends StatelessWidget {
               child: Consumer<FireController>(
                   builder: (context, fireController, _) {
                 return FutureBuilder(
-                    future: fireController.fechSelectedUserData(uid,),
+                    future: fireController.fechSelectedUserData(
+                      uid,
+                    ),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         shimmerEffect(
@@ -95,7 +95,9 @@ class SingleItemPage extends StatelessWidget {
                             CircleAvatar(
                               backgroundColor: WHITE,
                               radius: 30,
-                              backgroundImage: NetworkImage(user!.imageUrl),
+                              backgroundImage: user!.imageUrl.isEmpty
+                                  ? null
+                                  : NetworkImage(user.imageUrl),
                             ),
                             Text(
                               user.name,

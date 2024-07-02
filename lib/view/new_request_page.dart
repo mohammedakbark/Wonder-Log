@@ -16,6 +16,8 @@ class AddNewRequestPage extends StatelessWidget {
   AddNewRequestPage({super.key});
   TextEditingController placeNameController = TextEditingController();
   TextEditingController placeDecController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+
   clearRequest() {
     placeDecController.clear();
     placeNameController.clear();
@@ -45,6 +47,7 @@ class AddNewRequestPage extends StatelessWidget {
                         firController.urlGenarator(fileImage).then((url) {
                           firController
                               .addNewPost(AddNewPost(
+                                  amount: priceController.text,
                                   placeDescription: placeDecController.text,
                                   imageUrl: url!,
                                   placeName: placeNameController.text,
@@ -125,6 +128,27 @@ class AddNewRequestPage extends StatelessWidget {
                       controller: placeNameController,
                       decoration: InputDecoration(
                           hintText: "Place",
+                          hintStyle: normalStyle(letterSpacing: 1),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.words,
+                      controller: priceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Price",
                           hintStyle: normalStyle(letterSpacing: 1),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),

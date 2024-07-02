@@ -6,6 +6,7 @@ import 'package:wanderlog/controller/fire_controller.dart';
 import 'package:wanderlog/model/user_model.dart';
 import 'package:wanderlog/util/colors.dart';
 import 'package:wanderlog/util/style.dart';
+import 'package:wanderlog/view/chat_page.dart';
 import 'package:wanderlog/view/widgets/shimmer_effect.dart';
 
 class SelectedProfileDetail extends StatelessWidget {
@@ -74,6 +75,24 @@ class SelectedProfileDetail extends StatelessWidget {
                       SizedBox(
                         height: height * .02,
                       ),
+                      Row(
+                        children: [
+                          Text("Message"),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                          name: userModel.name,
+                                          url: userModel.imageUrl,
+                                          anotherUid: userModel.uid!,
+                                        )));
+                              },
+                              icon: Icon(CupertinoIcons.chat_bubble_text)),
+                        ],
+                      )
                     ],
                   ),
                 )

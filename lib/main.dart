@@ -14,7 +14,8 @@ void main() async {
   );
   runApp(const MyApp());
 }
-
+// native spalsh scree
+// catched networkimage
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

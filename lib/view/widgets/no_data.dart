@@ -4,6 +4,8 @@ import 'package:wanderlog/util/style.dart';
 import 'package:wanderlog/view/widgets/shimmer_effect.dart';
 
 class NoData extends StatelessWidget {
+
+  
   const NoData({super.key});
 
   @override

@@ -27,7 +27,7 @@ class EditProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: TRANSPERENT,
-        leading: const SizedBox(),
+        
         actions: [
           TextButton(
               onPressed: () {
@@ -169,7 +169,7 @@ class EditProfilePage extends StatelessWidget {
                         textCapitalization: TextCapitalization.sentences,
                         controller: editiDesController,
                         decoration: InputDecoration(
-                            hintText: "Description",
+                            hintText: "Contact Info.",
                             hintStyle: normalStyle(letterSpacing: 1),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
